@@ -5,9 +5,11 @@
 
     <v-container fluid>
 
+      <span v-if="dataEmpty" class="text-center d-block text-h5">Nothing to see here.....</span>
+
       <v-row class="mx-5" no-gutters>
 
-        <v-col lg="6" sm="6" md="6" cols="12" v-for="data, key in projects">
+        <v-col sm="6" md="4" cols="12" v-for="data in projects">
           <v-card class="ma-2 green lighten-5">
             <!-- <v-navigation-drawer v-model="drawer" class="green">&emsp;</v-navigation-drawer> -->
             <v-card-title>{{ data.title }}
@@ -25,22 +27,33 @@
 </template>
 
 <script>
+import { db, colRef } from '../../src/firebase-config';
+import { onSnapshot, orderBy, query, where } from '@firebase/firestore';
 export default {
   data() {
     return {
-      projects: [
-        { title: 'Project 1'},
-        { title: 'Project 2'},
-        { title: 'Project 3'},
-        { title: 'Project 4'},
-        { title: 'Project 5'},
-        { title: 'Project 6'},
-        { title: 'Project 7'},
-        { title: 'Project 8'},
-        { title: 'Project 9'}
-      ]
-      , page: 1 ,pageLimit:7 ,keyLimit:0,drawer:true
+      projects: [],drawer: true,
+      dataEmpty: true
     }
+  },
+  methods: {
+    fetchData() {
+      let data = [];
+      const q=query(colRef,where("status","==","completed"),orderBy('createdAt'));
+      onSnapshot(q, snapshot => {
+        snapshot.docs.forEach(e => {
+          data.push({ ...e.data(), id: e.id });
+        });
+        this.projects = data;
+        data = [];
+        if (this.projects.length != 0) {
+          this.dataEmpty =false;
+        }
+      })
+    }
+  },
+  created(){
+    this.fetchData();
   }
 }
 </script>

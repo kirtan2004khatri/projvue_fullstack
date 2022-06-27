@@ -4,57 +4,24 @@
 
     <v-container fluid>
       <v-row no-gutters style="height: 10rem" class="px-0">
-        <v-col
-          sm="6"
-          md="4"
-          cols="12"
-        >
-          <v-card
-            class="white--text ma-3 green"
-            style="height: 10rem; cursor: pointer"
-            to="/ongoing"
-          >
+        <v-col sm="6" md="4" cols="12">
+          <v-card class="white--text ma-3 green" style="height: 10rem; cursor: pointer" to="/ongoing">
             <v-card-title class="text-sm-h5 text-xs-h5 text-lg-h4">Ongoing</v-card-title>
-            <v-card-text
-              class="pt-2 white--text text-sm-h4 text-xs-h4 display-1"
-              >{{ongoing}}</v-card-text
-            >
+            <v-card-text class="pt-2 white--text text-sm-h4 text-xs-h4 display-1">{{ ongoing }}</v-card-text>
           </v-card>
         </v-col>
 
-        <v-col
-          sm="6"
-          md="4"
-          cols="12"
-        >
-          <v-card
-            class="white--text ma-3 primary"
-            style="height: 10rem; cursor: pointer"
-            to="/completed"
-          >
+        <v-col sm="6" md="4" cols="12">
+          <v-card class="white--text ma-3 primary" style="height: 10rem; cursor: pointer" to="/completed">
             <v-card-title class="text-sm-h5 text-xs-h5 text-lg-h4">Completed</v-card-title>
-            <v-card-text
-              class="pt-2 white--text text-sm-h4 text-xs-h4 display-1"
-              >{{completed}}</v-card-text
-            >
+            <v-card-text class="pt-2 white--text text-sm-h4 text-xs-h4 display-1">{{ completed }}</v-card-text>
           </v-card>
         </v-col>
 
-        <v-col
-          sm="6"
-          md="4"
-          cols="12"
-        >
-          <v-card
-            class="white--text ma-3 secondary"
-            style="height: 10rem; cursor: pointer"
-            to="/total"
-          >
+        <v-col sm="6" md="4" cols="12">
+          <v-card class="white--text ma-3 secondary" style="height: 10rem; cursor: pointer" to="/total">
             <v-card-title class="text-sm-h5 text-xs-h5 text-lg-h4">Total Projects</v-card-title>
-            <v-card-text
-              class="pt-2 white--text text-sm-h4 text-xs-h4 display-1"
-              >{{total}}</v-card-text
-            >
+            <v-card-text class="pt-2 white--text text-sm-h4 text-xs-h4 display-1">{{ total }}</v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -68,22 +35,7 @@ import { onSnapshot, serverTimestamp, addDoc } from "@firebase/firestore";
 export default {
   data() {
     return {
-      total:0,ongoing:0,completed:0,
-      cards: [
-        { title: this.title, count: 0, theme: "green", route: "/ongoing" },
-        {
-          title: "Completed",
-          count: 0,
-          theme: "secondary",
-          route: "/completed",
-        },
-        {
-          title: "Total Projects",
-          count: 0,
-          theme: "primary",
-          route: "/total",
-        },
-      ],
+      total: 0, ongoing: 0, completed: 0
     };
   },
   methods: {
@@ -93,13 +45,22 @@ export default {
         snapshot.docs.forEach((e) => {
           data.push({ ...e.data(), id: e.id });
         });
-        this.total=data.length;
-        console.log(data.length,this.total)
+        this.total = data.length;
+
+        this.ongoing = data.filter(element => {
+          return element.status == "ongoing";
+        });
+        this.ongoing = this.ongoing.length
+
+        this.completed = data.filter(element => {
+          return element.status == "completed";
+        });
+        this.completed = this.completed.length
         data = [];
       });
     },
   },
-  created(){
+  created() {
     this.fetchData();
   }
 };

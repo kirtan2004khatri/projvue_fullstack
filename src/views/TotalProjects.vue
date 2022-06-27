@@ -50,7 +50,7 @@
                     class="warning white--text"
                     :attrs="attrs"
                     v-on="on"
-                    @click="details=!details;showTitle=data.title;showDetails=data.details"
+                    @click="details=!details;showTitle=data.title;showDetails=data.details;showStatus=data.status"
                   >
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
@@ -138,7 +138,9 @@
         <v-card-title>Project Name:</v-card-title>
         <v-card-text>{{showTitle}}</v-card-text>
         <v-card-title>Project Details:</v-card-title>
-        <v-card-text>{{showDetails}}</v-card-text>
+        <v-card-text>{{showDetails}}</v-card-text>        
+        <v-card-title>Project Status:</v-card-title>
+        <v-card-text>{{showStatus}}</v-card-text>
         <v-card-action>
           <v-btn class="secondary white--text ma-4" @click="details=!details">Close</v-btn>
         </v-card-action>
@@ -156,6 +158,9 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  query,
+  where,
+  orderBy,
 } from "@firebase/firestore";
 export default {
   data() {
@@ -169,7 +174,7 @@ export default {
       projdetails: "",
       updt_project_title: "",
       updt_project_details: "",
-      showTitle:'',showDetails:'',
+      showTitle:'',showDetails:'',showStatus:'',
       rules: [
         (value) => !!value || "Required !",
         (value) => value.length <= 30 || "Max character limit is 30",
@@ -181,14 +186,15 @@ export default {
   methods: {
     fetchData() {
       let data = [];
-      onSnapshot(colRef, (snapshot) => {
+      const q=query(colRef,orderBy('createdAt'))
+      onSnapshot(q, (snapshot) => {
         snapshot.docs.forEach((e) => {
           data.push({ ...e.data(), id: e.id });
         });
         this.projects = data;
         data = [];
-        if (this.projects.length == 0) {
-          this.dataEmpty = true;
+        if (this.projects.length != 0) {
+          this.dataEmpty = false;
         }
       });
     },
@@ -196,10 +202,13 @@ export default {
       addDoc(colRef, {
         title: this.projtitle,
         details: this.projdetails,
-        status:'ongoing'
+        status:'ongoing',
+        createdAt:serverTimestamp()
       })
         .then(() => console.log("Data added succsfully....!"))
         .catch((err) => console.log(err));
+        this.dialog=!this.dialog
+        this.projdetails="";this.projtitle=""
     },
     deleteData(id) {
       const delRef = doc(db, colRef.id, id);
