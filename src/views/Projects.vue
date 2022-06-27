@@ -2,38 +2,105 @@
   <div class="project">
     <h1 class="ma-5 grey--text font-weight-regular">Projects</h1>
 
-    <v-container fluid >
+    <v-container fluid>
+      <v-row no-gutters style="height: 10rem" class="px-0">
+        <v-col
+          sm="6"
+          md="4"
+          cols="12"
+        >
+          <v-card
+            class="white--text ma-3 green"
+            style="height: 10rem; cursor: pointer"
+            to="/ongoing"
+          >
+            <v-card-title class="text-sm-h5 text-xs-h5 text-lg-h4">Ongoing</v-card-title>
+            <v-card-text
+              class="pt-2 white--text text-sm-h4 text-xs-h4 display-1"
+              >{{ongoing}}</v-card-text
+            >
+          </v-card>
+        </v-col>
 
-      <v-row no-gutters style="height:10rem" class="px-0">
-        <v-col xs="8" sm="6" lg="4" xl="4" cols="12" v-for="card in cards" :key="card" router>
-          <v-card class="white--text ma-3 " style="height:10rem;cursor:pointer" :class="card.theme" :to="card.route">
-            <v-card-title class="text-sm-h5 text-xs-h5 text-lg-h4">{{card.title}}</v-card-title>
-            <v-card-text class="pt-2 white--text text-sm-h4 text-xs-h4 display-1">{{card.count}}</v-card-text>
+        <v-col
+          sm="6"
+          md="4"
+          cols="12"
+        >
+          <v-card
+            class="white--text ma-3 primary"
+            style="height: 10rem; cursor: pointer"
+            to="/completed"
+          >
+            <v-card-title class="text-sm-h5 text-xs-h5 text-lg-h4">Completed</v-card-title>
+            <v-card-text
+              class="pt-2 white--text text-sm-h4 text-xs-h4 display-1"
+              >{{completed}}</v-card-text
+            >
+          </v-card>
+        </v-col>
+
+        <v-col
+          sm="6"
+          md="4"
+          cols="12"
+        >
+          <v-card
+            class="white--text ma-3 secondary"
+            style="height: 10rem; cursor: pointer"
+            to="/total"
+          >
+            <v-card-title class="text-sm-h5 text-xs-h5 text-lg-h4">Total Projects</v-card-title>
+            <v-card-text
+              class="pt-2 white--text text-sm-h4 text-xs-h4 display-1"
+              >{{total}}</v-card-text
+            >
           </v-card>
         </v-col>
       </v-row>
-
     </v-container>
   </div>
 </template>
 
 <script>
-  export default{
-    data(){
-      return{
-        projects:[
-          {title:'Project 1',description:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse magni nemo pariatur libero odit reiciendis voluptatum placeat animi sunt numquam fuga dolorum nesciunt iste illo error, officiis cum quasi exercitationem cupiditate dolor consectetur. '},
-          {title:'Project 2',description:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse magni nemo pariatur libero odit reiciendis voluptatum placeat animi sunt numquam fuga dolorum nesciunt iste illo error, officiis cum quasi exercitationem cupiditate dolor consectetur. '},
-          {title:'Project 3',description:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse magni nemo pariatur libero odit reiciendis voluptatum placeat animi sunt numquam fuga dolorum nesciunt iste illo error, officiis cum quasi exercitationem cupiditate dolor consectetur. '},
-          {title:'Project 4',description:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse magni nemo pariatur libero odit reiciendis voluptatum placeat animi sunt numquam fuga dolorum nesciunt iste illo error, officiis cum quasi exercitationem cupiditate dolor consectetur. '},
-          {title:'Project 5',description:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse magni nemo pariatur libero odit reiciendis voluptatum placeat animi sunt numquam fuga dolorum nesciunt iste illo error, officiis cum quasi exercitationem cupiditate dolor consectetur. '},
-        ],
-        cards:[
-          {title:'Ongoing',count:0,theme:'green',route:'/ongoing'},
-          {title:'Completed',count:0,theme:'secondary',route:'/completed'},
-          {title:'Total Projects',count:0,theme:'primary',route:'/total'}
-        ]
-      }
-    }
+import { db, colRef } from "../../src/firebase-config";
+import { onSnapshot, serverTimestamp, addDoc } from "@firebase/firestore";
+export default {
+  data() {
+    return {
+      total:0,ongoing:0,completed:0,
+      cards: [
+        { title: this.title, count: 0, theme: "green", route: "/ongoing" },
+        {
+          title: "Completed",
+          count: 0,
+          theme: "secondary",
+          route: "/completed",
+        },
+        {
+          title: "Total Projects",
+          count: 0,
+          theme: "primary",
+          route: "/total",
+        },
+      ],
+    };
+  },
+  methods: {
+    fetchData() {
+      let data = [];
+      onSnapshot(colRef, (snapshot) => {
+        snapshot.docs.forEach((e) => {
+          data.push({ ...e.data(), id: e.id });
+        });
+        this.total=data.length;
+        console.log(data.length,this.total)
+        data = [];
+      });
+    },
+  },
+  created(){
+    this.fetchData();
   }
+};
 </script>
