@@ -1,24 +1,6 @@
 <template>
   <div class="dashboard">
     <h1 class="grey--text lighten-4 display-1 pa-5">Dashboard</h1>
-
-    <!-- <v-container fluid class="pa-0 ma-0">
-      <v-row  class="yellow lighten-4" style="height:250px" no-gutters>
-        <v-col cols="12" md="3" lg="3" sm="6" align-self="start">
-          <v-btn block color="primary">Button 1</v-btn>
-        </v-col>
-        <v-col cols="12" md="3" lg="3" sm="6" align-self="end">
-          <v-btn block color="primary">Button 1</v-btn>
-        </v-col>
-        <v-col cols="12" md="3" lg="3" sm="6" align-self="center"> 
-          <v-btn block color="primary">Button 1</v-btn>
-        </v-col>
-        <v-col cols="12" md="3" lg="3 " sm="6">
-          <v-btn block color="primary">Button 1</v-btn>
-        </v-col>
-      </v-row>
-    </v-container> -->
-
     <v-container fluid >
 
       <v-row no-gutters style="height:10rem" class="px-5">

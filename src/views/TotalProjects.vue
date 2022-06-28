@@ -38,7 +38,10 @@
                 fab
                 x-small
                 class="error white--text mx-2"
-                @click="deleteData(data.id)"
+                @click="
+                  deleteDialog = !deleteDialog;
+                  deleteid = data.id;
+                "
               >
                 <v-icon>mdi-delete</v-icon></v-btn
               >
@@ -50,7 +53,12 @@
                     class="warning white--text"
                     :attrs="attrs"
                     v-on="on"
-                    @click="details=!details;showTitle=data.title;showDetails=data.details;showStatus=data.status"
+                    @click="
+                      details = !details;
+                      showTitle = data.title;
+                      showDetails = data.details;
+                      showStatus = data.status;
+                    "
                   >
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
@@ -58,7 +66,7 @@
                 <span>Detials</span>
               </v-tooltip>
             </v-card-title>
-            <v-card-text>{{ data.details }}</v-card-text>
+            <v-card-text>{{ data.startDate }} - {{ data.dueDate }}</v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -80,7 +88,69 @@
               label="Project Discription"
               v-model="projdetails"
             ></v-textarea>
-            <!-- <v-date- ></v-date-picker> -->
+
+            <!-- Date pickers -->
+            <!-- Start date -->
+            <!-- <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              :return-value.sync="date"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="date"
+                  label="Picker in menu"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="date" no-title scrollable>
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="menu = false">
+                  Cancel
+                </v-btn>
+                <v-btn text color="primary" @click="$refs.menu.save(date)">
+                  OK
+                </v-btn>
+              </v-date-picker>
+            </v-menu> -->
+            <!-- Due date -->
+             <!-- <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              :return-value.sync="date"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="date2"
+                  label="Picker in menu"
+                  prepend-icon="mdi-calendar"
+                  :allowed-dates="allowedDates"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="date" no-title scrollable>
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="menu = false">
+                  Cancel
+                </v-btn>
+                <v-btn text color="primary" @click="$refs.menu.save(date)">
+                  OK
+                </v-btn>
+              </v-date-picker>
+            </v-menu> -->
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -114,6 +184,7 @@
           label="Enter the updated details of project"
           v-model="updt_project_details"
         ></v-textarea>
+
         <v-btn
           medium
           class="indigo white--text ma-4"
@@ -127,25 +198,55 @@
         <v-btn
           medium
           class="secondary white--text ma-4"
-          @click="overlay = !overlay;"
+          @click="overlay = !overlay"
           >Close</v-btn
         >
       </v-card>
     </v-overlay>
-
+    <!-- Details Modal -->
     <v-overlay v-model="details">
-      <v-card light style="width:30rem" class="pa-4">
+      <v-card light style="width: 30rem" class="pa-4">
         <v-card-title>Project Name:</v-card-title>
-        <v-card-text>{{showTitle}}</v-card-text>
+        <v-card-text>{{ showTitle }}</v-card-text>
         <v-card-title>Project Details:</v-card-title>
-        <v-card-text>{{showDetails}}</v-card-text>        
+        <v-card-text>{{ showDetails }}</v-card-text>
         <v-card-title>Project Status:</v-card-title>
-        <v-card-text>{{showStatus}}</v-card-text>
+        <v-card-text>{{ showStatus }}</v-card-text>
+        <v-card-title>Project Start Date:</v-card-title>
+        <v-card-text>{{ startDate }}</v-card-text>
+        <v-card-title>Project Due Date:</v-card-title>
+        <v-card-text>{{ dueDate }}</v-card-text>
         <v-card-action>
-          <v-btn class="secondary white--text ma-4" @click="details=!details">Close</v-btn>
+          <v-btn class="secondary white--text ma-4" @click="details = !details"
+            >Close</v-btn
+          >
         </v-card-action>
       </v-card>
     </v-overlay>
+    <!-- Confirmation modal -->
+    <v-dialog
+      v-model="deleteDialog"
+      class="d-flex justify-center pa-5"
+      max-width="295"
+    >
+      <v-card>
+        <v-card-title
+          >Do you want to delete this item permanently ?</v-card-title
+        >
+        <v-card-action>
+          <v-btn
+            class="green white--text mx-5 my-5"
+            @click="deleteData(deleteid)"
+            >Yes</v-btn
+          >
+          <v-btn
+            class="secondary white--text"
+            @click="deleteDialog = !deleteDialog"
+            >No</v-btn
+          >
+        </v-card-action>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -168,25 +269,34 @@ export default {
       projects: [],
       overlay: false,
       addProject: true,
-      dataEmpty: false,
-      details:false,
+      dataEmpty: true,
+      details: false,
       projtitle: "",
       projdetails: "",
       updt_project_title: "",
       updt_project_details: "",
-      showTitle:'',showDetails:'',showStatus:'',
+      showTitle: "",
+      showDetails: "",
+      showStatus: "",
       rules: [
         (value) => !!value || "Required !",
         (value) => value.length <= 30 || "Max character limit is 30",
       ],
       dialog: false,
       tempid: 0,
+      deleteDialog: false,
+      deleteid: 0,
+      menu: false,
+      startDate: "",
+      dueDate: "",
+      date:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substring(0, 10),
+      date2:''
     };
   },
   methods: {
     fetchData() {
       let data = [];
-      const q=query(colRef,orderBy('createdAt'))
+      const q = query(colRef, orderBy("createdAt"));
       onSnapshot(q, (snapshot) => {
         snapshot.docs.forEach((e) => {
           data.push({ ...e.data(), id: e.id });
@@ -202,19 +312,21 @@ export default {
       addDoc(colRef, {
         title: this.projtitle,
         details: this.projdetails,
-        status:'ongoing',
-        createdAt:serverTimestamp()
+        status: "ongoing",
+        createdAt: serverTimestamp(),
       })
         .then(() => console.log("Data added succsfully....!"))
         .catch((err) => console.log(err));
-        this.dialog=!this.dialog
-        this.projdetails="";this.projtitle=""
+      this.dialog = !this.dialog;
+      this.projdetails = "";
+      this.projtitle = "";
     },
     deleteData(id) {
       const delRef = doc(db, colRef.id, id);
       deleteDoc(delRef)
         .then(() => console.log("Data deleted succesfully...."))
         .catch((err) => console.log(err));
+      this.deleteDialog = false;
     },
     updateData(id) {
       const updtRef = doc(db, colRef.id, id);
@@ -225,6 +337,11 @@ export default {
         .then(() => console.log("Data upated succesfully....."))
         .catch((err) => console.log(err));
     },
+    allowedDates(){
+      if(this.date<date1){
+        return this.date
+      }
+    }
   },
   created() {
     this.fetchData();

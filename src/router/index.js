@@ -7,6 +7,8 @@ import Teams from '../views/Teams.vue'
 import TotalProjects from '../views/TotalProjects.vue'
 import Ongoing from '../views/Ongoing.vue'
 import CompletedProjects from '../views/CompletedProjects.vue'
+import TeamMembers from '../views/TeamMembers.vue'
+import TotalTeams from '../views/TotalTeams.vue'
 
 Vue.use(VueRouter)
 
@@ -45,6 +47,16 @@ const routes = [
     path:"/completed",
     name:"completedProjects",
     component:CompletedProjects
+  },
+  {
+    path:"/team_members",
+    name:"team_members",
+    component:TeamMembers
+  },
+  {
+    path:'/total_teams',
+    name:"total_teams",
+    component:TotalTeams
   }
 ]
 

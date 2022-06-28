@@ -11,5 +11,7 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 const db=getFirestore();
 const colRef=collection(db,'projects');
+const teamRef=collection(db,'teams');
+const teamMembRef=collection(db,'teamMembers')
 
-export {db,colRef}
+export {db,colRef,teamRef,teamMembRef}
