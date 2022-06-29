@@ -1,13 +1,20 @@
 <template>
   <div>
-    <v-container fluid class="d-flex pa-5 align-center">
+    <v-container fluid class="d-flex py-4 px-5 text-md-h4 text-h6">
       <h1 class="grey--text text-md-h4 text-h6 font-weight-regular mt-3 ml-5">
         Your Team Members
       </h1>
       <v-spacer></v-spacer>
-      <v-btn class="green white--text mr-5" @click="dialog = !dialog">
+      <v-btn class="green white--text mt-2" @click="dialog = !dialog">
         <v-icon>mdi-plus</v-icon>Add
       </v-btn>
+    </v-container>
+    <v-container class="px-5 mx-auto  d-flex justify-center justify-md-start">
+      <v-breadcrumbs
+        :items="items"
+        large
+        class="pa-0 ma-0"
+      ></v-breadcrumbs>
     </v-container>
     <v-container>
       <v-card>
@@ -88,6 +95,10 @@ export default {
       exp: "",
       position: "",
       search: "",
+      items:[
+        {text:'Teams',href:'/teams'},
+        {text:'Team Members',disabled:true},
+      ]
     };
   },
   methods: {

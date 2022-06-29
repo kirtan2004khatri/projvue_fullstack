@@ -10,7 +10,14 @@
         Add
       </v-btn>
     </v-container>
-    <v-container fluid class="pl-5 mt-5">
+    <v-container fluid class="d-flex justify-md-start justify-center">
+      <v-breadcrumbs
+        :items="items"
+        large
+        class="pa-0 mx-2"
+      ></v-breadcrumbs>
+    </v-container>
+    <v-container fluid class="pl-5 mt-2">
       <h2 v-if="dataEmpty" class="text-center font-weight-regular">
         Nothing to see here.....
       </h2>
@@ -18,11 +25,11 @@
       <v-row>
         <v-col v-for="items in teams" :key="items" md="4" cols="12">
           <v-card elevation="5">
-            <v-card-title>{{ items.team_name }}
+            <v-card-title class="text-subtitle-1 text-md-h6">{{ items.team_name }}
             <v-spacer></v-spacer>
             <v-btn fab class="white--text primary" x-small><v-icon>mdi-pencil</v-icon></v-btn>
             <v-btn fab class="white--text red mx-2" x-small><v-icon>mdi-delete</v-icon></v-btn>
-            <v-btn fab class="white--text warning" x-small><v-icon>mdi-dots-vertical</v-icon></v-btn>
+            <v-btn fab class="white--text warning" x-small @click="details=!details;temp=items"><v-icon>mdi-dots-vertical</v-icon></v-btn>
             </v-card-title>
           </v-card>
         </v-col>
@@ -47,13 +54,33 @@
       </v-card>
     </v-dialog>
 
-  <v-dialog width="450">
+  <v-dialog v-model="details" width="450">
     <v-card>
-      <v-card-title>Team Details</v-card-title>
+      <v-card-title class="pa-5">Team Details</v-card-title>
       <v-card-text>
-        Team Members:<br>
-        {{}}
+        <v-row>
+          <v-col cols="6">
+            Team Name:
+          </v-col>
+          <v-col cols="6">
+            {{temp.team_name}}
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="6">
+            Team Members:
+          </v-col>
+          <v-col cols="6">
+            <span v-for="items in temp.team_members" class="d-block" :key="items">
+              {{items}}
+            </span>
+          </v-col>
+        </v-row>
       </v-card-text>
+      <v-card-action class="px-2">
+        <v-btn class="secondary white--text ma-3" @click="details=!details">Close</v-btn>
+      </v-card-action>
     </v-card>
   </v-dialog>
 
@@ -73,7 +100,12 @@ export default {
       dataEmpty: false,
       selected:[],
       dialog:false,
-      name:''
+      name:'',
+      temp:[],details:false,
+      items:[
+        {text:'Teams',href:'/teams'},
+        {text:'Total Teams',disabled:true}
+      ]
     };
   },
   methods: {

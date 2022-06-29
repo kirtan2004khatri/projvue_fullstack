@@ -1,25 +1,24 @@
 <template>
   <div class="project">
-    <h1 class="ma-5 grey--text font-weight-regular">Projects</h1>
-
+    <h1 class="pt-5 pl-5 grey--text font-weight-regular">Projects</h1>
     <v-container fluid>
-      <v-row no-gutters style="height: 10rem" class="px-0">
+      <v-row style="height: 10rem" class="px-2">
         <v-col sm="6" md="4" cols="12">
-          <v-card class="white--text ma-3 green" style="height: 10rem; cursor: pointer" to="/ongoing">
+          <v-card class="white--text green" style="height: 10rem; cursor: pointer" to="/ongoing">
             <v-card-title class="text-sm-h5 text-xs-h5 text-lg-h4">Ongoing</v-card-title>
             <v-card-text class="pt-2 white--text text-sm-h4 text-xs-h4 display-1">{{ ongoing }}</v-card-text>
           </v-card>
         </v-col>
 
         <v-col sm="6" md="4" cols="12">
-          <v-card class="white--text ma-3 primary" style="height: 10rem; cursor: pointer" to="/completed">
+          <v-card class="white--text primary" style="height: 10rem; cursor: pointer" to="/completed">
             <v-card-title class="text-sm-h5 text-xs-h5 text-lg-h4">Completed</v-card-title>
             <v-card-text class="pt-2 white--text text-sm-h4 text-xs-h4 display-1">{{ completed }}</v-card-text>
           </v-card>
         </v-col>
 
         <v-col sm="6" md="4" cols="12">
-          <v-card class="white--text ma-3 secondary" style="height: 10rem; cursor: pointer" to="/total">
+          <v-card class="white--text secondary" style="height: 10rem; cursor: pointer" to="/total">
             <v-card-title class="text-sm-h5 text-xs-h5 text-lg-h4">Total Projects</v-card-title>
             <v-card-text class="pt-2 white--text text-sm-h4 text-xs-h4 display-1">{{ total }}</v-card-text>
           </v-card>

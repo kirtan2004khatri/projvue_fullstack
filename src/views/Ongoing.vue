@@ -1,7 +1,14 @@
 <template>
   <div class="totalprojects">
-    <h1 class="grey--text display-1 font-weight-regular my-3 ml-5 py-3 pl-5">Your Ongoing Projects</h1>
+    <h1 class="grey--text text-h6 text-md-h1 font-weight-regular mt-3 ml-5 py-3 pl-5">Your Ongoing Projects</h1>
     <!-- <hr> -->
+
+    <v-container fluid class="py-0 mx-2">
+      <v-breadcrumbs
+        :items="items"
+        large
+      ></v-breadcrumbs>
+    </v-container>
 
     <v-container fluid>
 
@@ -20,7 +27,7 @@
               <v-icon>mdi-delete</v-icon>
             </v-btn>
             <v-btn class="secondary white--text mx-1" fab x-small
-              @click="details = !details; showTitle = data.title; showDetails = data.details; showStatus = data.status">
+              @click="details = !details; showTitle = data.title; showDetails = data.details; showStatus = data.status;showTeam=data.team">
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </v-card>
@@ -31,12 +38,36 @@
     <!-- This is the details shower -->
     <v-overlay v-model="details">
       <v-card light style="width:30rem" class="pa-4">
-        <v-card-title>Project Name:</v-card-title>
-        <v-card-text>{{ showTitle }}</v-card-text>
-        <v-card-title>Project Details:</v-card-title>
-        <v-card-text>{{ showDetails }}</v-card-text>
-        <v-card-title>Project Status:</v-card-title>
-        <v-card-text>{{ showStatus }}</v-card-text>
+      <v-card-title>Project Details</v-card-title>
+      <v-card-text>
+        <v-row>
+        <v-col cols="6">
+          Project Name
+        </v-col>
+        <v-col cols="6">
+          {{showTitle}}
+        </v-col>
+        <v-col cols="6">
+          Project Details
+        </v-col>
+        <v-col cols="6">
+          {{showDetails}}
+        </v-col>
+        <v-col cols="6">
+          Project Stauts
+        </v-col>
+        <v-col cols="6">
+          {{showStatus}}
+        </v-col>
+        <v-col cols="6">
+          Associated Team Of Project :
+        </v-col>
+        <v-col cols="6">
+          {{showTeam}}
+        </v-col>
+      </v-row>
+
+      </v-card-text>
         <v-card-action>
           <v-btn class="secondary white--text ma-4" @click="details = !details">Close</v-btn>
         </v-card-action>
@@ -53,7 +84,11 @@ export default {
     return {
       projects: []
       , page: 1, pageLimit: 7, keyLimit: 0,
-      dataEmpty: true, details: false, showTitle: '', showDetails: '',showStatus:''
+      dataEmpty: true, details: false, showTitle: '', showDetails: '',showStatus:'',showTeam:'',
+      items:[
+        {text:'Projects',href:'/projects'},
+        {text:'Ongoing Projects',disabled:true}
+      ]
     }
   },
   methods: {

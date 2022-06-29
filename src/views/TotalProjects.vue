@@ -1,7 +1,7 @@
 <template>
   <div class="totalprojects">
-    <v-container fluid class="d-flex pa-5 align-center">
-      <h1 class="grey--text display-1 font-weight-regular my-3 ml-5">
+    <v-container fluid class="d-flex pt-5 align-center">
+      <h1 class="grey--text display-1 font-weight-regular mt-2 ml-5">
         Your Total Projects
       </h1>
       <v-spacer></v-spacer>
@@ -10,6 +10,14 @@
       </v-btn>
     </v-container>
     <!-- <hr> -->
+
+    <v-container fluid class="pa-0 mx-5">
+      <v-breadcrumbs
+        :items="items"
+        large
+        class="px-5 pt-5"
+      ></v-breadcrumbs>
+    </v-container>
 
     <v-container fluid>
       <span v-if="dataEmpty" class="text-center d-block text-h5"
@@ -58,6 +66,7 @@
                       showTitle = data.title;
                       showDetails = data.details;
                       showStatus = data.status;
+                      showTeam=data.team;
                     "
                   >
                     <v-icon>mdi-dots-vertical</v-icon>
@@ -151,6 +160,13 @@
                 </v-btn>
               </v-date-picker>
             </v-menu> -->
+
+          <v-select
+            :items="teams"
+            label="Select team for project"
+            v-model="selected_team"
+          ></v-select>
+
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -206,16 +222,47 @@
     <!-- Details Modal -->
     <v-overlay v-model="details">
       <v-card light style="width: 30rem" class="pa-4">
-        <v-card-title>Project Name:</v-card-title>
-        <v-card-text>{{ showTitle }}</v-card-text>
-        <v-card-title>Project Details:</v-card-title>
-        <v-card-text>{{ showDetails }}</v-card-text>
-        <v-card-title>Project Status:</v-card-title>
-        <v-card-text>{{ showStatus }}</v-card-text>
-        <v-card-title>Project Start Date:</v-card-title>
-        <v-card-text>{{ startDate }}</v-card-text>
-        <v-card-title>Project Due Date:</v-card-title>
-        <v-card-text>{{ dueDate }}</v-card-text>
+      <v-card-title>Project Details</v-card-title>
+      <v-card-text>
+        <v-row>
+        <v-col cols="6">
+          Project Name : 
+        </v-col>
+        <v-col cols="6">
+          {{showTitle}}
+        </v-col>
+         <v-col cols="6">
+          Project Details : 
+        </v-col>
+        <v-col cols="6">
+          {{showDetails}}
+        </v-col>
+         <v-col cols="6">
+          Project Status : 
+        </v-col>
+        <v-col cols="6">
+          {{showStatus}}
+        </v-col>
+         <v-col cols="6">
+          Project Start Data : 
+        </v-col>
+        <v-col cols="6">
+          {{startDate}}
+        </v-col>
+         <v-col cols="6">
+          Project Due Date : 
+        </v-col>
+        <v-col cols="6">
+          {{dueData}}
+        </v-col>
+         <v-col cols="6">
+          Asssigned To Team : 
+        </v-col>
+        <v-col cols="6">
+          {{showTeam}}
+        </v-col>
+      </v-row>
+      </v-card-text>
         <v-card-action>
           <v-btn class="secondary white--text ma-4" @click="details = !details"
             >Close</v-btn
@@ -251,7 +298,7 @@
 </template>
 
 <script>
-import { db, colRef } from "../../src/firebase-config";
+import { db, colRef,teamRef } from "../../src/firebase-config";
 import {
   onSnapshot,
   serverTimestamp,
@@ -290,7 +337,13 @@ export default {
       startDate: "",
       dueDate: "",
       date:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substring(0, 10),
-      date2:''
+      date2:'',
+      items:[
+        {text:'Projects',href:'/projects'},
+        {text:'Total Projects',disabled:true}
+      ],
+      teams:[],
+      selected_team:'   ',showTeam:''
     };
   },
   methods: {
@@ -307,12 +360,22 @@ export default {
           this.dataEmpty = false;
         }
       });
+      onSnapshot(teamRef,snapshot=>{
+        snapshot.docs.forEach(e=>{
+          data.push({...e.data(),id:e.id});
+        });
+        data.forEach(e=>{
+          this.teams.push(e.team_name);
+        })
+        data=[]
+      })
     },
     addData() {
       addDoc(colRef, {
         title: this.projtitle,
         details: this.projdetails,
         status: "ongoing",
+        team:this.selected_team,
         createdAt: serverTimestamp(),
       })
         .then(() => console.log("Data added succsfully....!"))
@@ -320,6 +383,7 @@ export default {
       this.dialog = !this.dialog;
       this.projdetails = "";
       this.projtitle = "";
+      this.selected_team=[]
     },
     deleteData(id) {
       const delRef = doc(db, colRef.id, id);

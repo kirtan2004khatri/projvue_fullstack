@@ -1,5 +1,6 @@
 import {initializeApp} from 'firebase/app';
 import {getFirestore,collection} from 'firebase/firestore'
+import  {getAuth} from 'firebase/auth'
 const firebaseConfig = {
     apiKey: "AIzaSyD9RkWnjw7C3kf6o9dYI_p3jhdm_DLtKd0",
     authDomain: "proj-mgmt-app.firebaseapp.com",
@@ -13,5 +14,6 @@ const db=getFirestore();
 const colRef=collection(db,'projects');
 const teamRef=collection(db,'teams');
 const teamMembRef=collection(db,'teamMembers')
+const auth=getAuth()
 
-export {db,colRef,teamRef,teamMembRef}
+export {db,colRef,teamRef,teamMembRef,auth}
