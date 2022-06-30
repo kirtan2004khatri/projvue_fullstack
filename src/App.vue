@@ -15,7 +15,7 @@
     <v-navigation-drawer v-model="drawer" app v-if="allowed">
       <v-list>
         <v-list-item-group>
-          <v-list-item v-for="item in navs" :key="item" router :to="item.route">
+          <v-list-item v-for="item in navs" :key="item" router :to="item.route" nav>
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -24,6 +24,8 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
+      <v-spacer></v-spacer>
+      <v-btn block dark @click="logout">LOG OUT</v-btn>
     </v-navigation-drawer>
 
     <v-main>
@@ -103,17 +105,23 @@ export default {
       {
         if(cred._tokenResponse.email==cemail){
           this.allowed=true;
-          localStorage.setItem('loged in',1);
+          sessionStorage.setItem('loged in',1);
         }
         else{
           this.allowed=false;
         }
       })
       .catch(err=>console.log(err));
+    },
+    logout(){
+      let a=sessionStorage.getItem('loged in')
+      a=0
+      sessionStorage.setItem('loged in',0);
+      this.allowed=false;
     }
   },
   created(){
-    if(localStorage.getItem('loged in')==1){
+    if(sessionStorage.getItem('loged in')==1){
       this.allowed=true
     }
   }

@@ -1,21 +1,21 @@
 <template>
   <div class="totalprojects">
-    <v-container fluid class="d-flex pt-5 align-center">
-      <h1 class="grey--text display-1 font-weight-regular mt-2 ml-5">
+    <v-container fluid class="d-flex pt-5 py-0 align-center">
+      <h1 class="grey--text text-md-h4 text-h6 font-weight-regular mt-md-2 ml-md-5 pl-md-0 pl-2">
         Your Total Projects
       </h1>
       <v-spacer></v-spacer>
-      <v-btn class="green white--text mr-5" @click="dialog = !dialog">
+      <v-btn class="green white--text mr-md-5" @click="dialog = !dialog">
         <v-icon>mdi-plus</v-icon>Add
       </v-btn>
     </v-container>
     <!-- <hr> -->
 
-    <v-container fluid class="pa-0 mx-5">
+    <v-container fluid class="pa-0 py-0 my-0 mx-md-5 mx-1">
       <v-breadcrumbs
         :items="items"
         large
-        class="px-5 pt-5"
+        class="px-5 pt-md-5"
       ></v-breadcrumbs>
     </v-container>
 
@@ -24,8 +24,8 @@
         >Nothing to see here.....</span
       >
 
-      <v-row class="mx-5" no-gutters>
-        <v-col md="4" cols="12" v-for="data in projects" :key="data">
+      <v-row class="mx-md-5" no-gutters>
+        <v-col md="4" cols="12" v-for="data in temp" :key="data">
           <v-card class="ma-2" elevation="4">
             <v-card-title class="text-h6"
               >{{ data.title }}
@@ -273,7 +273,7 @@
     <!-- Confirmation modal -->
     <v-dialog
       v-model="deleteDialog"
-      class="d-flex justify-center pa-5"
+      class="d-flex ma-0 justify-center"
       max-width="295"
     >
       <v-card>
@@ -294,6 +294,18 @@
         </v-card-action>
       </v-card>
     </v-dialog>
+
+  <v-pagination
+    v-if="pageVisible"
+    v-model="page"
+    :page="this.page"
+    dark
+    :length="Math.ceil(this.projects.length/12)"
+    color="green"
+    @input="viewer(page)"
+    class="ma-5"
+  ></v-pagination>
+
   </div>
 </template>
 
@@ -343,7 +355,8 @@ export default {
         {text:'Total Projects',disabled:true}
       ],
       teams:[],
-      selected_team:'   ',showTeam:''
+      selected_team:'',showTeam:'',page:1,
+      temp:[],pageVisible:false
     };
   },
   methods: {
@@ -355,9 +368,13 @@ export default {
           data.push({ ...e.data(), id: e.id });
         });
         this.projects = data;
+        this.temp=data.slice(0,12);
         data = [];
         if (this.projects.length != 0) {
           this.dataEmpty = false;
+        }
+        if((Math.ceil(this.projects.length/12))>1){
+          this.pageVisible=true;
         }
       });
       onSnapshot(teamRef,snapshot=>{
@@ -405,10 +422,15 @@ export default {
       if(this.date<date1){
         return this.date
       }
-    }
+    },
+    viewer(page){
+      this.temp=this.projects.slice((page-1)*12,(page-1)*12+12);
+      console.log(this.temp);
+      }
   },
   created() {
     this.fetchData();
+    this.viewer(this.page);
   },
 };
 </script>

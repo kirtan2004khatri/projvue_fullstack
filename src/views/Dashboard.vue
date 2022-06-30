@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard">
-    <h1 class="grey--text lighten-4 display-1 text-md-left text-center">Dashboard</h1>
+    <h1 class="grey--text lighten-4 pt-md-2 pt-2 text-h4 mx-5 mt-5 mb-3 text-left">Dashboard</h1>
     <v-container fluid >
 
-      <v-row no-gutters style="height:10rem" class="px-5">
+      <v-row no-gutters style="height:10rem">
         <v-col xs="8" sm="6" lg="4" xl="4" cols="12">
           <v-card class="white--text ma-2 warning" style="height:10rem">
             <v-card-title class="text-sm-h5 text-xs-h5 text-lg-h4">Projects</v-card-title>

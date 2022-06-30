@@ -1,19 +1,16 @@
 <template>
   <div class="totalprojects">
-    <h1 class="grey--text display-1 font-weight-regular my-3 ml-5 pt-5 pl-5">
+    <h1 class="grey--text text-md-h4 text-h5 font-weight-regular mt-5 ml-5 pt-md-2 pt-1 pl-md-5">
       Your Completed Projects
     </h1>
     <!-- <hr> -->
 
-    <v-container fluid class="pa-0 mx-2 px-4">
-      <v-breadcrumbs
-        :items="items"
-        large
-      ></v-breadcrumbs>
+    <v-container fluid class="pa-0 mx-md-2 px-md-4">
+      <v-breadcrumbs :items="items" large></v-breadcrumbs>
     </v-container>
 
     <v-container fluid>
-      <span v-if="dataEmpty" class="text-center d-block text-h5"
+      <span v-if="dataEmpty" class="text-center d-block text-h5 mt-md-0 mt-5"
         >Nothing to see here.....</span
       >
 
@@ -31,7 +28,13 @@
       </v-row>
     </v-container>
 
-    <!-- <v-pagination v-model="page" length="4" next="page++;pageLimit+=pageLimit;keyLimit+=7" previous="page--" input="page"></v-pagination> -->
+    <v-pagination
+      :page="page"
+      :length="Math.ceil(this.projects.length / 12)"
+      dark
+      color="green"
+      v-if="navVisible"
+    ></v-pagination>
   </div>
 </template>
 
@@ -44,10 +47,11 @@ export default {
       projects: [],
       drawer: true,
       dataEmpty: true,
-      items:[
-        {text:'Projects',href:'/projects'},
-        {text:'Completed Projects',disabled:true}
-      ]
+      items: [
+        { text: "Projects", href: "/projects" },
+        { text: "Completed Projects", disabled: true },
+      ],
+      navVisible:false
     };
   },
   methods: {
@@ -63,6 +67,9 @@ export default {
           data.push({ ...e.data(), id: e.id });
         });
         this.projects = data;
+        if (Math.ceil(this.projects.length / 12) > 1) {
+          this.navVisible = true;
+        }
         data = [];
         if (this.projects.length != 0) {
           this.dataEmpty = false;

@@ -1,9 +1,9 @@
 <template>
   <div class="teams pa-0">
-    <h1 class="grey--text display-1 font-weight-regular my-3 ml-5 pa-3">
+    <h1 class="grey--text text-h4 font-weight-regular my-3 ml-5 pt-2">
       Your Teams
     </h1>
-    <v-container fluid class="">
+    <v-container fluid class="px-5">
       <v-row>
         <v-col cols="12" md="4">
           <v-card class="white--text primary" router to="/team_members" >
@@ -30,7 +30,9 @@ import {onSnapshot} from '@firebase/firestore';
     data(){
       return{
         teams:[],
-        members:[]
+        members:[],
+        page:1,
+        temp:[]
       }
     },
     methods:{
@@ -41,6 +43,7 @@ import {onSnapshot} from '@firebase/firestore';
             data.push({...e.data(),id:e.id});
           });
           this.teams=data;
+          this.temp=data;
           console.log(data);
           data=[];
         });

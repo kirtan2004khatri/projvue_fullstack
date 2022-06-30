@@ -1,22 +1,22 @@
 <template>
-  <div>
-    <v-container fluid class="d-flex py-4 px-5 text-md-h4 text-h6">
-      <h1 class="grey--text text-md-h4 text-h6 font-weight-regular mt-3 ml-5">
+  <div class="pb-5 mb-5">
+    <v-container fluid class="d-flex justify-center align-center pt-4 px-5 text-md-h4 text-h6">
+      <h1 class="grey--text text-md-h4 text-h6 font-weight-regular mt-3 ml-md-5">
         Your Team Members
       </h1>
       <v-spacer></v-spacer>
-      <v-btn class="green white--text mt-2" @click="dialog = !dialog">
+      <v-btn class="green white--text" @click="dialog = !dialog">
         <v-icon>mdi-plus</v-icon>Add
       </v-btn>
     </v-container>
-    <v-container class="px-5 mx-auto  d-flex justify-center justify-md-start">
+    <v-container class="d-flex justify-start px-md-0 px-5 ml-md-5 pl-md-5 ml-1 mt-0">
       <v-breadcrumbs
         :items="items"
         large
         class="pa-0 ma-0"
       ></v-breadcrumbs>
     </v-container>
-    <v-container>
+    <v-container class="px-md-0 mt-md-2 px-4">
       <v-card>
         <v-card-title>Members Details</v-card-title>
         <v-text-field
@@ -79,6 +79,7 @@ export default {
         { text: "Expereince", value: "expereince" },
       ],
       teams: [],
+      page:1,
       developers: [
         "Front Developer",
         "Backend Developer",
@@ -123,10 +124,7 @@ export default {
         .catch((err) => console.log(err));
       this.dialog = !this.dialog;
       this.name='',this.position='',this.exp=""
-    },
-    func() {
-      alert("This is the alert !");
-    },
+    }
   },
   created() {
     this.fetchData();

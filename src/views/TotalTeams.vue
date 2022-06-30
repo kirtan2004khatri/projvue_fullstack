@@ -1,28 +1,30 @@
 <template>
   <div class="teams pa-0">
-    <v-container fluid class="d-flex justify-between align-center px-5 mt-5">
+    <v-container fluid class="d-flex justify-between align-center px-md-5 px-5 pt-4 mt-3 mx-md-5 my-0">
       <h1 class="grey--text text-md-h4 text-h6 font-weight-regular">
         Your Teams
       </h1>
       <v-spacer></v-spacer>
-      <v-btn class="green white--text" @click="dialog=!dialog">
+      <v-btn class="green white--text mr-md-5" @click="dialog=!dialog">
         <v-icon>mdi-plus</v-icon>
         Add
       </v-btn>
     </v-container>
-    <v-container fluid class="d-flex justify-md-start justify-center">
+
+    <v-container fluid class="d-flex justify-start ml-md-5">
       <v-breadcrumbs
         :items="items"
         large
         class="pa-0 mx-2"
       ></v-breadcrumbs>
     </v-container>
-    <v-container fluid class="pl-5 mt-2">
+
+    <v-container fluid class="mt-2 px-5">
       <h2 v-if="dataEmpty" class="text-center font-weight-regular">
         Nothing to see here.....
       </h2>
 
-      <v-row>
+      <v-row class="px-md-5">
         <v-col v-for="items in teams" :key="items" md="4" cols="12">
           <v-card elevation="5">
             <v-card-title class="text-subtitle-1 text-md-h6">{{ items.team_name }}
@@ -84,6 +86,14 @@
     </v-card>
   </v-dialog>
 
+  <v-pagination
+    :page="page"
+    :length="Math.ceil(this.teams.length/12)"
+    dark
+    color="green"
+    v-if="navVisible"
+  ></v-pagination>
+
   </div>
 </template>
 
@@ -93,7 +103,6 @@ import { onSnapshot, addDoc } from "@firebase/firestore";
 export default {
   data() {
     return {
-      teams: ["dasds", "dasdasd", "dasdsa", "dasdasdad"],
       members: [],
       selected_members:[],
       teams: [],
@@ -105,7 +114,7 @@ export default {
       items:[
         {text:'Teams',href:'/teams'},
         {text:'Total Teams',disabled:true}
-      ]
+      ],navVisible:false
     };
   },
   methods: {
@@ -117,6 +126,9 @@ export default {
         });
         this.teams = data;
         data = [];
+        if((Math.ceil(this.projects.length/12))>1){
+          this.navVisible=true
+        }
       });
       let data2=[]
       onSnapshot(teamMembRef, (snapshot) => {
