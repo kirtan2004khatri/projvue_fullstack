@@ -5,17 +5,26 @@
         class="white--text"
         @click="drawer = !drawer"
       ></v-app-bar-nav-icon>
-      <v-toolbar-title class="text-h5 white--text">ProjVue</v-toolbar-title>
-      <v-spacer></v-spacer>
-        <v-avatar color="white" size="40">
-          <v-icon>mdi-account</v-icon>
-        </v-avatar>
+      <v-toolbar-title >
+        <router-link to="/" class="text-h5 white--text text-decoration-none">ProjVUE</router-link>
+    </v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-menu absolute left>
+      <template v-slot:activator="{on}">
+      <v-btn v-on="on" fab small class="white" flat depressed>
+        <v-icon>mdi-account</v-icon>
+      </v-btn>
+      </template>
+      <v-card width="100">
+        
+      </v-card>
+    </v-menu>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app v-if="allowed">
-      <v-list>
+    <v-navigation-drawer v-model="drawer" app v-if="allowed" absolute temporary >
+      <v-list nav  desnse>
         <v-list-item-group>
-          <v-list-item v-for="item in navs" :key="item" router :to="item.route" nav>
+          <v-list-item v-for="item in navs" :key="item" router :to="item.route">
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -44,6 +53,7 @@
               maxlength="8"
               :rules="rules"
               :type="show ? 'text' : 'password'"
+              @keypress.enter.prevent="login"
               ></v-text-field>
             <v-btn class="primary white--text mt-5 mb-2" block @click="login">Log in</v-btn>
           <v-card-text class="text-center">Dont have an account ? <span class="text-decoration-underline blue--text font-weight-bold" style="cursor:pointer" @click="signup=!signup">Create One</span></v-card-text>
